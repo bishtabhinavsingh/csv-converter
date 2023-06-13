@@ -26,5 +26,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs # Replace with the actual path to your generated Javadoc files
+          publish_dir: ./target/site/apidocs/docs
           publish_branch: gh-pages
