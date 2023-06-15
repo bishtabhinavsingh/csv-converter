@@ -8,7 +8,7 @@ Making the CSV tool as modular as possible so it can be used as a microservice o
 
 |           	 |Feature  |Release Version| Language| 
 |----------------|-----------------|--------------|-----------------------------|
-|13 June, 2023|`CSV to SQL`        |CsvConverter-0.0.1-SNAPSHOT (Pre-release)            |`Java` `Go`
+|13 June, 2023|`CSV to SQL`        |CsvConverter-0.0.1-SNAPSHOT (Pre-release)            |`Java`
 
 
 StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
