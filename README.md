@@ -1,6 +1,6 @@
 # CsvConverter Tool
 
-The purpose of this tool is to become a swissarmy knife like tool for all databases (SQL and No SQL) with simple command-line interface. Later phase of the project will involve developing a more user friendly GUI.
+The purpose of this tool is to become a swissarmy knife like tool for sending csv data to any database (SQL or No SQL) with simple command-line interface. Later phase of the project will involve developing a more user friendly GUI.
 
 Making the CSV tool as modular as possible so it can be used as a microservice or imported as a library to enhance functionality of an existing application.
 
