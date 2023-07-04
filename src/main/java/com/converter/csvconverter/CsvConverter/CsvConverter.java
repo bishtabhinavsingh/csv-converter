@@ -1,7 +1,5 @@
 package com.converter.csvconverter.CsvConverter;
-import com.converter.csvconverter.DataBaseHandler.DDBHandler;
-import com.converter.csvconverter.DataBaseHandler.DataBaseHandler;
-import com.converter.csvconverter.DataBaseHandler.SQLHandler;
+import com.converter.csvconverter.DataBaseHandler.*;
 import com.opencsv.CSVReader;
 import org.springframework.stereotype.Component;
 
@@ -112,10 +110,12 @@ public class CsvConverter {
     private static void sendToDB(CSVReader reader, String db_type, String db_details, String filePath) throws Exception {
         DataBaseHandler db_handler = null;
         switch (db_type){
+
             case "sql":
                 //initialize connection to sql_db
                 System.out.println("DB: SQL Selected");
-                db_handler = new SQLHandler(db_details);
+                SQLConfig sqlConfig = new SQLConfig();
+                db_handler = sqlConfig.configDB(db_details);
                 System.out.println("DB: SQL Handler Initialized");
                 break;
 
@@ -123,6 +123,14 @@ public class CsvConverter {
                 //initialize connection to ddb_db
                 System.out.println("DB: DDB Selected");
                 db_handler = new DDBHandler();
+                break;
+
+            case "mdb":
+                //initialize connection to Mongo_db
+                System.out.println("DB: MongoDB Selected");
+                MongoDBConfig mongoDBConfig = new MongoDBConfig();
+                db_handler = mongoDBConfig.configDB(db_details);
+                System.out.println("DB: MongoDB Handler Initialized");
                 break;
 
             default:

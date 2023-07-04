@@ -1,17 +1,10 @@
 package com.converter.csvconverter.DataBaseHandler;
 
-import com.converter.csvconverter.InferDataType;
+import com.converter.csvconverter.Utilities.InferDataType;
 import com.opencsv.CSVReader;
-import org.yaml.snakeyaml.Yaml;
 import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Map;
+import java.sql.*;
 
 /**
  * SQL implementation of the DataBaseHandler interface.
@@ -32,12 +25,13 @@ import java.util.Map;
 public class SQLHandler implements DataBaseHandler {
     private Connection connection;
 
-    public SQLHandler(String filePath) {
-        configDB(filePath);
-    }
-
     public SQLHandler() {
     }
+
+    public SQLHandler(Connection connection) {
+        this.connection = connection;
+    }
+
 
 
     /**
@@ -65,7 +59,7 @@ public class SQLHandler implements DataBaseHandler {
      * @param reader CSVReader is a CSV reader.
      * @return String prepared DDL statement.
      * @throws Exception if the input is negative
-     * @see com.converter.csvconverter.InferDataType
+     * @see InferDataType
      * @see com.opencsv.CSVReader
      *
      */
@@ -111,8 +105,15 @@ public class SQLHandler implements DataBaseHandler {
                 query += head + ", ";
             }
             query = query.substring(0, query.length()-2);
-            query += ") VALUES ";
+            query += ") VALUES "; // number (?)
+            //PreparedStatement ps = this.connection.prepareStatement(query);
             String[] row;
+//            while ((row = reader.readerNext() != null)){
+//                for ();
+//                ps.setObject();
+//                ps.addBatch();
+//            }
+
             while ((row = reader.readNext()) != null) {
                 String batch = "(";
                 System.out.println(row.toString());
@@ -163,55 +164,8 @@ public class SQLHandler implements DataBaseHandler {
         Statement statement = this.connection.createStatement();
         statement.execute(ddl);
         statement.close();
+        //connection.close();
         System.out.println("DB: SQL Table created");
     }
 
-    /**
-     * Configures SQL based on loaded YAML file.
-     * Sets DB url, username, password.
-     * Uses helper function loadConfig.
-     *
-     * @param configFile String is the path to config YAML.
-     * @see java.util.Map
-     * @see java.sql.Connection
-     *
-     */
-    @Override
-    public void configDB(String configFile) {
-        // Load configuration from YAML file
-        Map<String, String> config = loadConfig(configFile);
-        System.out.println("DB: SQL Config Load SUCCESS");
-
-        // Extract database connection details from the configuration
-        String url = config.get("url");
-        String username = config.get("username");
-        String password = config.get("password");
-
-        // Create a database connection
-        try {
-            this.connection = DriverManager.getConnection(url, username, password);
-            System.out.println("DB: SQL Connection SUCCESS");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Configures SQL based on loaded YAML file.
-     * Loads DB url, username, password.
-     *
-     * @param filePath String is the path to config YAML.
-     * @return Map<String, String> that maps the DB url, username, password.
-     * @see java.util.Map
-     *
-     */
-    private static Map<String, String> loadConfig(String filePath) {
-        try (FileInputStream fis = new FileInputStream(filePath)) {
-            Yaml yaml = new Yaml();
-            return yaml.load(fis);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }

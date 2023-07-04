@@ -3,6 +3,7 @@ import com.converter.csvconverter.CsvConverter.CsvConverter;
 import org.apache.commons.cli.*;
 
 import java.util.Collection;
+import java.util.Properties;
 
 /**
  * Utility class for parsing command-line arguments and executing corresponding methods.
@@ -49,13 +50,20 @@ public class ArgParser {
             .argName("method_name")
             .build();
 
+        Option mdb_option = Option.builder("m")
+            .longOpt("mdb")
+            .desc("Chooses MongoDB as primary database")
+            .hasArg(true)
+            .argName("method_name")
+            .build();
+
         options.addOption(csv_option);
         options.addOption(xlx_option);
         options.addOption(sql_option);
+        options.addOption(mdb_option);
 
-        Collection<Option> opts = options.getOptions();
         CommandLineParser parser = new DefaultParser();
-
+        Properties properties = new Properties();
         try {
             String methodName = null;
             String db_details = null;
@@ -63,16 +71,26 @@ public class ArgParser {
             CommandLine cmd = parser.parse(options, args);
             // Based on the parsed method name, execute the desired method
             if (cmd.hasOption('c')) {
+                methodName = cmd.getOptionValue("csv");
                 if (cmd.hasOption('s')){
-                    methodName = cmd.getOptionValue("csv");
+                    // CSV + SQL
+                    properties.setProperty("spring.profiles.active", "sql");
                     db_details = cmd.getOptionValue("sql");
                     db_type = "sql";
-                } else {
+                } else if (cmd.hasOption('m')) {
+                    // CSV + MDB
+                    System.out.println("MONGODB:" + cmd.getOptionValue("mdb"));
+                    properties.setProperty("spring.profiles.active", "mongodb");
+                    db_details = cmd.getOptionValue("m");
+                    db_type = "mdb";
+                }
+                else {
                     System.out.println("Missing Database Argument");
                 }
             } else if (cmd.hasOption('x')) {
                 // to test other option
                 System.out.println("other method called" + cmd.getOptionValue("xlx"));
+
             } else {
                 // fails
                 System.out.println("Invalid method: ");

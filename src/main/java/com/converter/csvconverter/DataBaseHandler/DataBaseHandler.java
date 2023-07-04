@@ -18,9 +18,7 @@ public interface DataBaseHandler {
 
     String ddlBuilder(CSVReader reader) throws Exception;
     String batchInsertBuilder(CSVReader reader) throws Exception;
-    void createTable(String ddl) throws SQLException;
-    void uploadToDB(String ps) throws SQLException;
-    void configDB(String config);
-
+    void createTable(String ddl) throws Exception;
+    void uploadToDB(String ps) throws Exception;
 
 }

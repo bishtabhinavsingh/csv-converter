@@ -11,8 +11,7 @@ import com.opencsv.CSVReader;
  * @see com.converter.csvconverter.DataBaseHandler.DataBaseHandler
  * @see com.opencsv.CSVReader
  */
-public class DDBHandler implements DataBaseHandler {
-
+public class DDBHandler implements DataBaseHandler, DataBaseConfig {
     public String ddlBuilder(CSVReader reader) throws Exception{
         try {
             System.out.println("Upload Complete");
@@ -43,7 +42,7 @@ public class DDBHandler implements DataBaseHandler {
     }
 
     @Override
-    public void configDB(String config) {
-
+    public DataBaseHandler configDB(String config) {
+        return new DDBHandler();
     }
 }
